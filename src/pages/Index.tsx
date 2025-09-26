@@ -3,10 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
+import TVSchedule from '@/components/TVSchedule';
 
 const Index = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [reminders, setReminders] = useState<{[key: string]: boolean}>({});
+  const [activeSection, setActiveSection] = useState<'live' | 'schedule'>('live');
 
   const channels = [
     {
@@ -98,17 +100,21 @@ const Index = () => {
               </h1>
             </div>
             <nav className="flex items-center space-x-6">
-              <Button variant="ghost" className="text-white hover:text-red-500">
-                <Icon name="Home" size={20} className="mr-2" />
-                Главная
+              <Button 
+                variant="ghost" 
+                className={`${activeSection === 'live' ? 'text-red-500' : 'text-white hover:text-red-500'}`}
+                onClick={() => setActiveSection('live')}
+              >
+                <Icon name="Radio" size={20} className="mr-2" />
+                Прямой эфир
               </Button>
-              <Button variant="ghost" className="text-white hover:text-red-500">
-                <Icon name="Tv" size={20} className="mr-2" />
-                Каналы
-              </Button>
-              <Button variant="ghost" className="text-white hover:text-red-500">
+              <Button 
+                variant="ghost" 
+                className={`${activeSection === 'schedule' ? 'text-red-500' : 'text-white hover:text-red-500'}`}
+                onClick={() => setActiveSection('schedule')}
+              >
                 <Icon name="Calendar" size={20} className="mr-2" />
-                Программа
+                Программа передач
               </Button>
               <Button variant="ghost" className="text-white hover:text-red-500">
                 <Icon name="Newspaper" size={20} className="mr-2" />
@@ -146,16 +152,18 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Channels Grid */}
+      {/* Main Content */}
       <section className="py-16 px-4">
         <div className="container mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-3xl font-bold text-white">Прямые эфиры</h3>
-            <Button className="bg-red-600 hover:bg-red-700 text-white">
-              <Icon name="Settings" size={20} className="mr-2" />
-              Настроить каналы
-            </Button>
-          </div>
+          {activeSection === 'live' && (
+            <>
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-3xl font-bold text-white">Прямые эфиры</h3>
+                <Button className="bg-red-600 hover:bg-red-700 text-white">
+                  <Icon name="Settings" size={20} className="mr-2" />
+                  Настроить каналы
+                </Button>
+              </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {channels.map((channel) => (
@@ -230,7 +238,13 @@ const Index = () => {
                 </CardContent>
               </Card>
             ))}
-          </div>
+              </div>
+            </>
+          )}
+
+          {activeSection === 'schedule' && (
+            <TVSchedule />
+          )}
         </div>
       </section>
 
